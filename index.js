@@ -7,6 +7,13 @@ var stripComments = require('strip-css-comments')
 module.exports = scope
 scope.replace = replace
 
+/**
+ * ### `css = scope(css, parent, options?)`
+ * 
+ * Return css string with each rule prefixed with the parent selector.
+ * Note that parent selector itself will be ignored.
+ * Also each `:host` keyword will be replaced with parent value.
+ */
 function scope (css, parent, o) {
 	if (!css) return css
 
@@ -32,6 +39,11 @@ function scope (css, parent, o) {
 	//revoke wrongly replaced :root blocks
 	css = css.replace(new RegExp('(' + parentRe + ')\\s*:root', 'g'), ':root')
 
+	if (o.allowGlobal) {
+		//revoke everything, if there is :global selector
+		css = css.replace(/(^|\n)[^{]+:global /g, '$1')
+	}
+
 	//animations: prefix animation anmes
 	var animations = [],
 	    animationNameRe = /@keyframes\s+([a-zA-Z0-9_-]+)\s*{/g,
@@ -56,6 +68,23 @@ function scope (css, parent, o) {
 	return css
 }
 
+/**
+ * ### `css = scope.replace(css, 'replacement $1$2')`
+ * 
+ * Apply replace to css, where `$1` is matched selectors
+ * and `$2` is rules for the selectors. It does not do
+ * any self/host detection, so use it for more flexible replacements.
+ * 
+ * ```js
+ * scope.replace(`
+ * .my-component, .my-other-component {
+ *    padding: 0;
+ * }
+ * `, '$1');
+ * 
+ * // `.my-component, .my-other-component`
+ * ```
+ */
 function replace (css, replacer) {
 	var arr = []
 

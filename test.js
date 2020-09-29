@@ -5,6 +5,19 @@ var t = require('tape')
 var c = require('cln')
 
 
+t('allowGlobal', t => {
+	t.equal(scope(
+		c`
+		:global body {font-size: 13px}
+		* {font-size: 11px}`,
+		'.wrapper',
+		{ allowGlobal: true }
+	), c`
+		body {font-size: 13px}
+		.wrapper * {font-size: 11px}`)
+	t.end()
+})
+
 t('ignore self selector', t => {
 	t.equal(scope(
 	c`
