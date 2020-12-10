@@ -1,7 +1,10 @@
 {
-  "name": "scope-css",
+  "name": "@patarapolw/scope-css",
   "version": "1.3.0",
   "description": "Scope each css rule with a selector, ie. nest into parent",
+  "publishConfig": {
+    "access": "public"
+  },
   "keywords": [
     "css",
     "style",
@@ -40,10 +43,5 @@
   "devDependencies": {
     "cln": "^1.1.0",
     "tape": "^5.0.1"
-  },
-  "engines": {
-    "pnpm": "please-use-npm",
-    "yarn": "please-use-npm"
-  },
-  "engineStrict": true
+  }
 }
